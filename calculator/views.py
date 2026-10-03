@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
 from .utils.calc import avaliar, ExpressaoInvalida
 
 # Create your views here.

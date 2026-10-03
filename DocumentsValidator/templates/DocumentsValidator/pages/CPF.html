@@ -1,0 +1,27 @@
+{% extends "global/base.html" %}
+{% block title %}Validador de CPF's{% endblock title %}
+
+{% block content %}
+
+<div class="doc_validator">
+    <h2>Validar CPF</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name='cpf' value="{{ cpf_digitado }}" placeholder="Digite um CPF">
+        <button type="submit">Validar</button>
+    </form>
+    {% if resultado %}
+        <h3>{{ resultado }}</h3>
+    {% endif %}
+
+    <hr>
+
+    <h2>Gerar CPF</h2>
+    <a href="?gerar=True"><button>Gerar Novo CPF</button></a>
+    {% if cpf_gerado %}
+        <h3>CPF gerado: <strong><code>{{ cpf_gerado }}</code></strong></h3>
+    {% endif %}
+
+</div>
+
+{% endblock content %}
