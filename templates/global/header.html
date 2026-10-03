@@ -12,12 +12,12 @@
         </ul>
     </div>
     
-    <div class="search-bar" id="search-bar">
-        <form action="" method="get">
+    {% comment %} <div class="search-bar" id="search-bar">
+        <form action="{% url 'search' %}" method="get">
             <input type="text" name="q" placeholder="Buscar..." class="search-input">
             <button type="submit" class="search-btn">
                 <i></i>
             </button>
         </form>
-    </div>
+    </div> {% endcomment %}
 </header>
