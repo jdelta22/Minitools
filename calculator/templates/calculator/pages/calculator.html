@@ -1,57 +1,77 @@
 {% extends "global/base.html" %}
 {% load static %}
-{% block title %}Calculadora{% endblock title %}
-{% block extra_css %} <link rel="stylesheet" href="{% static 'calculator/css/calculator.css' %}">{% endblock %}
 
+{% block title %}Calculadora · MiniTools{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'calculator/css/calculator.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="calculator">
-    
-    <form method="post">
+<div class="tool calculator">
+    <header class="tool-header">
+        <p class="tool-eyebrow">Ferramenta</p>
+        <h1 class="tool-title">Calculadora</h1>
+        <p class="tool-desc">Expressões com +, −, ×, ÷, raízes e funções trigonométricas.</p>
+    </header>
+
+    <form method="post" class="calc-form">
         {% csrf_token %}
-        <input type="text" name="expressao" value="{{ expressao }}" placeholder="ex : 2*(3+4) + sqrt(16)"  autofocus required id="display_calc">
-        <button type="submit">=</button>
-        <button type="button" class="limpar" onclick="limparVisor()">C</button>
-    </form>
-    {% if erro %}
-    <p class="calc_result erro_calc">={{ erro }}</p>
-    {% elif resultado is not None %}
-    <p class="calc_result" >Resultado: <strong>{{ resultado }}</strong></p>
-    {% endif %}
-    <div class="botoes_calc">
-        <div class="buttons_num">
-            <button onclick="adicionarValor('1')">1</button>
-            <button onclick="adicionarValor('2')">2</button>
-            <button onclick="adicionarValor('3')">3</button>
-            <button onclick="adicionarValor('4')">4</button>
-            <button onclick="adicionarValor('5')">5</button>
-            <button onclick="adicionarValor('6')">6</button>
-            <button onclick="adicionarValor('7')">7</button>
-            <button onclick="adicionarValor('8')">8</button>
-            <button onclick="adicionarValor('9')">9</button>
-            <button onclick="adicionarValor('0')">0</button>
+        <input
+            type="text"
+            name="expressao"
+            value="{{ expressao }}"
+            placeholder="ex: 2*(3+4) + sqrt(16)"
+            autofocus
+            required
+            id="display_calc"
+            class="field-input calc-display"
+            autocomplete="off"
+            aria-label="Expressão matemática"
+        >
+        <div class="calc-actions">
+            <button type="submit" class="btn btn-primary">=</button>
+            <button type="button" class="btn btn-ghost limpar" onclick="limparVisor()">C</button>
         </div>
-        <div class="buttons_ope">
-            <button onclick="adicionarValor('/')">/</button>
-            <button onclick="adicionarValor('*')">*</button>
-            <button onclick="adicionarValor('-')">-</button>
-            <button onclick="adicionarValor('+')">+</button>
-            <button onclick="adicionarValor('sqrt()')">sqrt()</button>
-            <button onclick="adicionarValor('sin()')">sin()</button>
-            <button onclick="adicionarValor('cos()')">cos()</button>
-            <button onclick="adicionarValor('tan()')">tan()</button>
-            <button onclick="adicionarValor('log()')">log()</button>
-            <button onclick="adicionarValor('fat()')">fat()</button>
-            <button onclick="adicionarValor('(')">(</button>
-            <button onclick="adicionarValor(')')">)</button>
-            
+    </form>
+
+    {% if erro %}
+    <p class="alert alert-error calc_result erro_calc" role="alert">{{ erro }}</p>
+    {% elif resultado is not None %}
+    <p class="alert alert-info calc_result">Resultado: <strong>{{ resultado }}</strong></p>
+    {% endif %}
+
+    <div class="botoes_calc">
+        <div class="buttons_num" aria-label="Números">
+            <button type="button" onclick="adicionarValor('1')">1</button>
+            <button type="button" onclick="adicionarValor('2')">2</button>
+            <button type="button" onclick="adicionarValor('3')">3</button>
+            <button type="button" onclick="adicionarValor('4')">4</button>
+            <button type="button" onclick="adicionarValor('5')">5</button>
+            <button type="button" onclick="adicionarValor('6')">6</button>
+            <button type="button" onclick="adicionarValor('7')">7</button>
+            <button type="button" onclick="adicionarValor('8')">8</button>
+            <button type="button" onclick="adicionarValor('9')">9</button>
+            <button type="button" onclick="adicionarValor('0')">0</button>
+        </div>
+        <div class="buttons_ope" aria-label="Operadores">
+            <button type="button" onclick="adicionarValor('/')">/</button>
+            <button type="button" onclick="adicionarValor('*')">*</button>
+            <button type="button" onclick="adicionarValor('-')">−</button>
+            <button type="button" onclick="adicionarValor('+')">+</button>
+            <button type="button" onclick="adicionarValor('sqrt()')">sqrt</button>
+            <button type="button" onclick="adicionarValor('sin()')">sin</button>
+            <button type="button" onclick="adicionarValor('cos()')">cos</button>
+            <button type="button" onclick="adicionarValor('tan()')">tan</button>
+            <button type="button" onclick="adicionarValor('log()')">log</button>
+            <button type="button" onclick="adicionarValor('fat()')">fat</button>
+            <button type="button" onclick="adicionarValor('(')">(</button>
+            <button type="button" onclick="adicionarValor(')')">)</button>
         </div>
     </div>
 </div>
-
 {% endblock content %}
 
 {% block scripts %}
-    <script src="{% static "calculator/js/display.js" %}"></script>
+<script src="{% static 'calculator/js/display.js' %}"></script>
 {% endblock scripts %}
-

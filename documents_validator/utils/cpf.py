@@ -1,85 +1,61 @@
+"""Geração e validação de CPF (algoritmo dos dígitos verificadores)."""
+
+from __future__ import annotations
+
 import random
+import re
 
-def Criar_CPF():
-    numero_9_digitos = str(random.randint(100000000, 999999999))
 
-    # primeiro digito verificador
-    soma_ver_1 = 0
-    controle =10
-    for digit in numero_9_digitos:
-        soma_ver_1 += int(digit)*controle
-        controle -=1
-    resto = soma_ver_1%11
+class CpfInvalido(ValueError):
+    """Entrada de CPF em formato inadequado."""
 
-    if resto == 0 or resto == 1:
-        digito_verificador_1 = str(0)
-    else:
-        digito_verificador_1 = str(11-resto)
 
-    # segundo digito verificador
-    numero_com_ver1 = numero_9_digitos+digito_verificador_1
-    soma_ver_2 = 0
-    controle =11
-    for digit in numero_com_ver1:
-        soma_ver_2 += int(digit)*controle
-        controle -=1
-    
-    resto2 = soma_ver_2%11
+def limpar_cpf(cpf: str) -> str:
+    """Remove máscara e espaços; mantém apenas dígitos."""
+    return re.sub(r"\D", "", str(cpf or ""))
 
-    if resto2 == 0 or resto2 == 1:
-        digito_verificador_2 = str(0)
-    else:
-        digito_verificador_2 = str(11-resto2)
 
-    # CPF retornado em forma de string
-    Cpf = f"{numero_9_digitos}{digito_verificador_1}{digito_verificador_2}"
+def formatar_cpf(cpf: str) -> str:
+    """Formata 11 dígitos como 000.000.000-00."""
+    digits = limpar_cpf(cpf)
+    if len(digits) != 11:
+        raise CpfInvalido("CPF deve ter 11 dígitos.")
+    return f"{digits[:3]}.{digits[3:6]}.{digits[6:9]}-{digits[9:]}"
 
-    return Cpf
 
-class CPFinvalido(ValueError):
-    pass
+def _digito_verificador(base: str, peso_inicial: int) -> str:
+    total = sum(int(d) * peso for d, peso in zip(base, range(peso_inicial, 1, -1)))
+    resto = total % 11
+    return "0" if resto < 2 else str(11 - resto)
 
-def Validar_CPF(cpf):
-    if len(cpf) > 11:
-        raise CPFinvalido("O formato do CPF não está adequado")
-    else:
-        cpf = str(cpf)
 
-    
-    cpf_para_verificar = cpf[:9:]
+def _calcular_digitos(nove_digitos: str) -> str:
+    d1 = _digito_verificador(nove_digitos, 10)
+    d2 = _digito_verificador(nove_digitos + d1, 11)
+    return d1 + d2
 
-    # primeiro digito verificador
-    soma_ver_1 = 0
-    controle =10
-    for digit in cpf_para_verificar:
-        soma_ver_1 += int(digit)*controle
-        controle -=1
-    resto = soma_ver_1%11
 
-    if resto == 0 or resto == 1:
-        digito_verificador_1 = str(0)
-    else:
-        digito_verificador_1 = str(11-resto)
+def criar_cpf(formatado: bool = True) -> str:
+    """Gera um CPF com dígitos verificadores válidos (uso em testes)."""
+    while True:
+        nove = f"{random.randint(0, 999_999_999):09d}"
+        if len(set(nove)) > 1:
+            break
+    cpf = nove + _calcular_digitos(nove)
+    return formatar_cpf(cpf) if formatado else cpf
 
-    # segundo digito verificador
-    numero_com_ver1 = cpf_para_verificar+digito_verificador_1
-    soma_ver_2 = 0
-    controle =11
-    for digit in numero_com_ver1:
-        soma_ver_2 += int(digit)*controle
-        controle -=1
-    
-    resto2 = soma_ver_2%11
 
-    if resto2 == 0 or resto2 == 1:
-        digito_verificador_2 = str(0)
-    else:
-        digito_verificador_2 = str(11-resto2)
-
-    cpf_para_verificar = f"{cpf_para_verificar}{digito_verificador_1}{digito_verificador_2}"
-
-    if cpf_para_verificar == cpf:
-        return True
-    else:
+def validar_cpf(cpf: str) -> bool:
+    """
+    Retorna True se o CPF for válido.
+    Aceita com ou sem máscara. Levanta CpfInvalido se a entrada for vazia
+    ou não tiver exatamente 11 dígitos após limpeza.
+    """
+    digits = limpar_cpf(cpf)
+    if not digits:
+        raise CpfInvalido("Informe um CPF.")
+    if len(digits) != 11:
+        raise CpfInvalido("CPF deve ter 11 dígitos.")
+    if digits == digits[0] * 11:
         return False
-
+    return digits == digits[:9] + _calcular_digitos(digits[:9])

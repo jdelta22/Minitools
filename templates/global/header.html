@@ -1,23 +1,37 @@
-<header class=header>
+{% load static %}
+<header class="header">
     <div class="logo">
-        <a href="">
-            <img src="" alt="Logo MiniTools">
+        <a href="{% url 'calculator:calculator' %}" aria-label="MiniTools — início">
+            <img
+                src="{% static 'global/img/logo.png' %}"
+                alt="Project Minitools"
+                class="logo-img"
+                width="160"
+                height="76"
+            >
         </a>
     </div>
-        
-    <div class="infos">
+
+    <nav class="infos" aria-label="Ferramentas">
         <ul class="menu-links">
-            <li><a href="">Sobre</a></li>
-            <li><a href="">Contato</a></li>
+            <li>
+                <a href="{% url 'calculator:calculator' %}"
+                   class="{% if request.resolver_match.app_name == 'calculator' %}is-active{% endif %}">
+                    Calculadora
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'documents_validator:cpf_validator' %}"
+                   class="{% if request.resolver_match.app_name == 'documents_validator' %}is-active{% endif %}">
+                    Validador CPF
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'documents_validator:cnpj_validator' %}"
+                   class="{% if request.resolver_match.app_name == 'documents_validator' %}is-active{% endif %}">
+                    Validador CNPJ
+                </a>
+            </li>
         </ul>
-    </div>
-    
-    {% comment %} <div class="search-bar" id="search-bar">
-        <form action="{% url 'search' %}" method="get">
-            <input type="text" name="q" placeholder="Buscar..." class="search-input">
-            <button type="submit" class="search-btn">
-                <i></i>
-            </button>
-        </form>
-    </div> {% endcomment %}
+    </nav>
 </header>

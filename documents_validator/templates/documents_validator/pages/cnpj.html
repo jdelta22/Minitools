@@ -1,0 +1,59 @@
+{% extends "global/base.html" %}
+{% load static %}
+
+{% block title %}Validador de CNPJ · MiniTools{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'documents_validator/css/cpf.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="tool tool--wide doc_validator">
+    <header class="tool-header">
+        <p class="tool-eyebrow">Documentos</p>
+        <h1 class="tool-title">Validador de CNPJ</h1>
+        <p class="tool-desc">Valide um CNPJ existente ou gere um número válido para testes.</p>
+    </header>
+
+    <section class="tool-section" aria-labelledby="validar-title">
+        <h2 id="validar-title" class="section-title">Validar CNPJ</h2>
+        <form method="post" class="form-row">
+            {% csrf_token %}
+            <input
+                type="text"
+                name="cnpj"
+                value="{{ cnpj_digitado }}"
+                placeholder="00.000.000/0000-00"
+                class="field-input"
+                inputmode="stringformat"
+                autocomplete="off"
+                aria-label="CNPJ para validar"
+            >
+            <button type="submit" class="btn btn-primary">Validar</button>
+        </form>
+
+        {% if resultado %}
+            {% if resultado_ok %}
+            <p class="alert alert-success" role="status">{{ resultado }}</p>
+            {% else %}
+            <p class="alert alert-error" role="alert">{{ resultado }}</p>
+            {% endif %}
+        {% endif %}
+    </section>
+
+    <section class="tool-section" aria-labelledby="gerar-title">
+        <h2 id="gerar-title" class="section-title">Gerar CNPJ</h2>
+        <p class="tool-desc">Gera um CNPJ com dígitos verificadores corretos (uso em testes).</p>
+        <form method="get" class="form-row">
+            <input type="hidden" name="gerar" value="1">
+            <button type="submit" class="btn btn-accent">Gerar novo CNPJ</button>
+        </form>
+
+        {% if cnpj_gerado %}
+        <p class="alert alert-info" role="status">
+            CNPJ gerado: <code>{{ cnpj_gerado }}</code>
+        </p>
+        {% endif %}
+    </section>
+</div>
+{% endblock content %}

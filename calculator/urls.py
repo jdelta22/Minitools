@@ -1,8 +1,9 @@
-from django.contrib import admin
 from django.urls import path
-from .views import Calculator
 
-app_name = 'calculator'
+from .views import calculator_view
+
+app_name = "calculator"
+
 urlpatterns = [
-    path('calculator/', Calculator, name="calculator" ),
+    path("calculator/", calculator_view, name="calculator"),
 ]

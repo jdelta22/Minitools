@@ -1,27 +1,59 @@
 {% extends "global/base.html" %}
-{% block title %}Validador de CPF's{% endblock title %}
+{% load static %}
+
+{% block title %}Validador de CPF · MiniTools{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'documents_validator/css/cpf.css' %}">
+{% endblock %}
 
 {% block content %}
+<div class="tool tool--wide doc_validator">
+    <header class="tool-header">
+        <p class="tool-eyebrow">Documentos</p>
+        <h1 class="tool-title">Validador de CPF</h1>
+        <p class="tool-desc">Valide um CPF existente ou gere um número válido para testes.</p>
+    </header>
 
-<div class="doc_validator">
-    <h2>Validar CPF</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <input type="text" name='cpf' value="{{ cpf_digitado }}" placeholder="Digite um CPF">
-        <button type="submit">Validar</button>
-    </form>
-    {% if resultado %}
-        <h3>{{ resultado }}</h3>
-    {% endif %}
+    <section class="tool-section" aria-labelledby="validar-title">
+        <h2 id="validar-title" class="section-title">Validar CPF</h2>
+        <form method="post" class="form-row">
+            {% csrf_token %}
+            <input
+                type="text"
+                name="cpf"
+                value="{{ cpf_digitado }}"
+                placeholder="000.000.000-00"
+                class="field-input"
+                inputmode="numeric"
+                autocomplete="off"
+                aria-label="CPF para validar"
+            >
+            <button type="submit" class="btn btn-primary">Validar</button>
+        </form>
 
-    <hr>
+        {% if resultado %}
+            {% if resultado_ok %}
+            <p class="alert alert-success" role="status">{{ resultado }}</p>
+            {% else %}
+            <p class="alert alert-error" role="alert">{{ resultado }}</p>
+            {% endif %}
+        {% endif %}
+    </section>
 
-    <h2>Gerar CPF</h2>
-    <a href="?gerar=True"><button>Gerar Novo CPF</button></a>
-    {% if cpf_gerado %}
-        <h3>CPF gerado: <strong><code>{{ cpf_gerado }}</code></strong></h3>
-    {% endif %}
+    <section class="tool-section" aria-labelledby="gerar-title">
+        <h2 id="gerar-title" class="section-title">Gerar CPF</h2>
+        <p class="tool-desc">Gera um CPF com dígitos verificadores corretos (uso em testes).</p>
+        <form method="get" class="form-row">
+            <input type="hidden" name="gerar" value="1">
+            <button type="submit" class="btn btn-accent">Gerar novo CPF</button>
+        </form>
 
+        {% if cpf_gerado %}
+        <p class="alert alert-info" role="status">
+            CPF gerado: <code>{{ cpf_gerado }}</code>
+        </p>
+        {% endif %}
+    </section>
 </div>
-
 {% endblock content %}

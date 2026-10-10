@@ -1,0 +1,19 @@
+/* Validador de CPF — ajustes específicos sobre .tool global */
+.doc_validator .form-row {
+    align-items: stretch;
+}
+
+.doc_validator .form-row .btn {
+    flex: 0 0 auto;
+    min-width: 8.5rem;
+}
+
+.doc_validator .alert code {
+    display: inline-block;
+    margin-left: 0.25rem;
+    padding: 0.15rem 0.45rem;
+    background: rgba(255, 106, 26, 0.14);
+    border: 1px solid rgba(255, 106, 26, 0.28);
+    border-radius: 4px;
+    color: var(--color-primary);
+}

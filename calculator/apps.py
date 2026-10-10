@@ -2,4 +2,6 @@ from django.apps import AppConfig
 
 
 class CalculatorConfig(AppConfig):
-    name = 'calculator'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "calculator"
+    verbose_name = "Calculadora"

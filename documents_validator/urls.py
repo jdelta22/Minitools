@@ -1,8 +1,11 @@
-from django.contrib import admin
 from django.urls import path
-from .views import Cpf
 
-app_name = 'documentsvalidator'
+from .views import cpf_validator, cnpj_validator
+
+app_name = "documents_validator"
+
 urlpatterns = [
-    path('docvalidator/cpf', Cpf, name="Cpf_validator" ),
+    path("documents/cpf/", cpf_validator, name="cpf_validator"),
+    path("documents/cnpj/", cnpj_validator, name="cnpj_validator"),
+
 ]
